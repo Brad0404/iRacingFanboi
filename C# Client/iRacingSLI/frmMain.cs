@@ -40,7 +40,26 @@ namespace iRacingSLI {
             String[] ports = SerialPort.GetPortNames();
             cboPorts.Items.AddRange(ports);
             cboPorts.SelectedIndex = 0;
-            if (AutodetectArduinoPort() != null)
+            string ArduinoPort = null;
+
+            try
+            {
+                ArduinoPort = System.IO.File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "iRacingFanboi.txt");
+                //if (ArduinoPort == "SDF") { }
+            }
+            catch (Exception e2)
+            {
+                //Do nothing
+                //ArduinoPort = "test";
+            }
+          
+
+            //if ((System.IO.File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "iRacingFanboi.txt") != null)) {
+            if (ArduinoPort != null) { 
+                label1.Text = "Arduino set to " + ArduinoPort;
+                cboPorts.SelectedItem = ArduinoPort;
+            }
+            else if (AutodetectArduinoPort() != null)
             {
                 label1.Text = "Arduino autodetected on " + AutodetectArduinoPort();
                 cboPorts.SelectedItem = AutodetectArduinoPort();
@@ -257,6 +276,9 @@ namespace iRacingSLI {
         }
         private string AutodetectArduinoPort()
         {
+
+            
+
             ManagementScope connectionScope = new ManagementScope();
             SelectQuery serialQuery = new SelectQuery("SELECT * FROM Win32_SerialPort");
             ManagementObjectSearcher searcher = new ManagementObjectSearcher(connectionScope, serialQuery);
@@ -296,7 +318,7 @@ namespace iRacingSLI {
         {
 
         }
-
+        
         private void cboPorts_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -308,6 +330,27 @@ namespace iRacingSLI {
             tmr.Enabled = false;
             startSerialPort();
             tmr.Enabled = true;
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            
+            //string fileName = "iRacingFanboi.txt";
+
+
+            //System.IO.StreamWriter objWriter;
+            //objWriter = new System.IO.StreamWriter(fileName, true);
+
+            //objWriter.Write("txtNameText");
+            //objWriter.Write(txtAddress.Text);
+            //objWriter.Write(txtEmail.Text);
+            //objWriter.Write(txtPhone.Text);
+            //objWriter.Flush();
+
+            System.IO.File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "iRacingFanboi.txt", cboPorts.Text);
+            label1.Text = "Arduino set to " + cboPorts.Text;
+
+            MessageBox.Show("Details have been saved");
         }
     }
 }

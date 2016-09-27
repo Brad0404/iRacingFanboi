@@ -38,6 +38,7 @@
             this.radioButtonConst = new System.Windows.Forms.RadioButton();
             this.chkAutoTopSpeed = new System.Windows.Forms.CheckBox();
             this.lblFanSpeed = new System.Windows.Forms.Label();
+            this.btnSave = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.carTopSpeed)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -50,12 +51,14 @@
             // 
             // cmbSerial
             // 
-            this.cmbSerial.Location = new System.Drawing.Point(9, 180);
+            this.cmbSerial.Enabled = false;
+            this.cmbSerial.Location = new System.Drawing.Point(207, 127);
             this.cmbSerial.Name = "cmbSerial";
-            this.cmbSerial.Size = new System.Drawing.Size(192, 43);
+            this.cmbSerial.Size = new System.Drawing.Size(53, 43);
             this.cmbSerial.TabIndex = 0;
             this.cmbSerial.Text = "Start serial port";
             this.cmbSerial.UseVisualStyleBackColor = true;
+            this.cmbSerial.Visible = false;
             this.cmbSerial.Click += new System.EventHandler(this.cmbSerial_Click);
             // 
             // cboPorts
@@ -74,7 +77,7 @@
             // 
             this.lblColor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.lblColor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblColor.Location = new System.Drawing.Point(9, 226);
+            this.lblColor.Location = new System.Drawing.Point(9, 206);
             this.lblColor.Name = "lblColor";
             this.lblColor.Size = new System.Drawing.Size(18, 19);
             this.lblColor.TabIndex = 6;
@@ -82,7 +85,7 @@
             // lblConn
             // 
             this.lblConn.AutoSize = true;
-            this.lblConn.Location = new System.Drawing.Point(6, 164);
+            this.lblConn.Location = new System.Drawing.Point(12, 193);
             this.lblConn.Name = "lblConn";
             this.lblConn.Size = new System.Drawing.Size(0, 13);
             this.lblConn.TabIndex = 7;
@@ -193,11 +196,22 @@
             this.lblFanSpeed.TabIndex = 24;
             this.lblFanSpeed.Text = "Fan Speed : 0";
             // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(9, 167);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(106, 23);
+            this.btnSave.TabIndex = 25;
+            this.btnSave.Text = "Save Settings";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(275, 250);
+            this.ClientSize = new System.Drawing.Size(275, 232);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.lblFanSpeed);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.lblSpeed);
@@ -235,6 +249,7 @@
         private System.Windows.Forms.Label lblFanSpeed;
         private System.Windows.Forms.CheckBox chkAutoTopSpeed;
         private System.Windows.Forms.RadioButton radioButtonConst;
+        private System.Windows.Forms.Button btnSave;
     }
 }
 
