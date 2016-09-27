@@ -12,10 +12,8 @@ using System.Diagnostics;
 using System.Management;
 using System.Runtime.CompilerServices;
 
-
 namespace iRacingSLI {
     public partial class frmMain : Form {
-
         iRacingSDK sdk = new iRacingSDK();
         
         SerialPort SP;
@@ -45,37 +43,49 @@ namespace iRacingSLI {
                 label1.Text = "Arduino autodetected on " + AutodetectArduinoPort();
                 cboPorts.SelectedItem = AutodetectArduinoPort();
             }
+
+            string saved_port = readSerialPortFromFile();
+            foreach (string port in cboPorts.Items)
+            {
+                if (port.Equals(saved_port))
+                {
+                    cboPorts.SelectedItem = saved_port;
+                    label1.Text = "Restored saved port " + port;
+                    break;
+                }
+            }
+
             lblConn.Text = "No connection with iRacing API";
             sdk.Startup(); 
             tmr.Enabled = true;
-
-
         }
 
         private void tmr_Tick(object sender, EventArgs e) {
             if (Process.GetProcesses().Any(p => p.ProcessName.Contains("iRacingService")))
             {
-                lblColor.BackColor = Color.FromArgb(0, 0, 200);
+                lbliracingStatus.BackColor = Color.Yellow;
                 if (Process.GetProcesses().Any(p => p.ProcessName.Contains("iRacingSim")))
                 {
-                    lblColor.BackColor = Color.FromArgb(0, 200, 0);
                     sdk.Startup();
                 }
-            } else {
+            }
+            else
+            {
                 lblConn.Text = "iRacing NOT running";
-                lblColor.BackColor = Color.FromArgb(200, 0, 0); sdk.Shutdown();
+                lbliracingStatus.BackColor = Color.Red;
+                sdk.Shutdown();
             }
 
             if (sdk.IsConnected())
             {
-                lblConn.Text = "iRacing SDK IsConnected";
-                
+                lblConn.Text = "iRacing SDK is connected";
+                lbliracingStatus.BackColor = Color.LimeGreen;
             }
             else if (sdk.IsInitialized)
-             {
-                lblConn.Text = "iRacing SDK IsInitialized";
-                
-             }
+            {
+                lblConn.Text = "iRacing SDK is initialized";
+                lbliracingStatus.BackColor = Color.Yellow;
+            }
             
 
                 if (sdk.IsConnected()) {
@@ -174,34 +184,59 @@ namespace iRacingSLI {
         
         private void startSerialPort()
         {
-            try {
+            try
+            {
                 SP.Close();
                 sdk.Shutdown();
             }
-            catch (Exception e)
-            {
-                
-            }
-            try
-            {
-                SP = new SerialPort(cboPorts.Text, 9600, Parity.None, 8);
+            catch (Exception){}
 
-                SP.Open();
-            }
-            catch (Exception e)
-            {
-                
-                MessageBox.Show("NO!");
-                if (AutodetectArduinoPort() != null)
+            foreach(string port in getSortedSerialPortsToOpen())
+            { 
+                try
                 {
-                    label1.Text = "Arduino autodetected on " + AutodetectArduinoPort();
-                    cboPorts.SelectedItem = AutodetectArduinoPort();
-                    SP = new SerialPort(cboPorts.Text, 9600, Parity.None, 8);
+                    openSerialPort(port);
 
-                    SP.Open();
+                    // We successfully opened this port, so set the combo box to that
+                    // value and set our status to green.
+                    cboPorts.SelectedItem = port;
+                    lblArduinoStatus.BackColor = Color.LimeGreen;
+                    label1.Text = "Connected to port " + port;
+                    break;
                 }
-                            }
+                catch (Exception)
+                {
+                    label1.Text = "Failed connecting to port " + port;
+                    lblArduinoStatus.BackColor = Color.Red;
+                }
+            }
+        }
 
+        private List<string> getSortedSerialPortsToOpen()
+        {
+            List<string> ports = new List<string>();
+
+            foreach (string port in cboPorts.Items)
+            {
+                ports.Add(port);
+            }
+
+            string selectedPort = cboPorts.SelectedText;
+            int indexOf = ports.IndexOf(selectedPort);
+
+            if (indexOf >= 0)
+            {
+                ports.RemoveAt(indexOf);
+                ports.Insert(0, selectedPort);
+            }
+
+            return ports;
+        }
+
+        private void openSerialPort(string port)
+        {
+            SP = new SerialPort(port, 9600, Parity.None, 8);
+            SP.Open();
         }
 
         private void writeSerialPort(double Speed, EventArgs e)
@@ -234,27 +269,13 @@ namespace iRacingSLI {
                 //SP.Write(serialdata, 0, 19);
                 SP.Write(serialdata, 0, 4);
             }
-            catch (Exception e2)
+            catch (Exception)
             {
                 startSerialPort();
             }
 
         }
 
-        private void trkWindFront_Scroll(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label8_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
-
-        }
         private string AutodetectArduinoPort()
         {
             ManagementScope connectionScope = new ManagementScope();
@@ -274,7 +295,7 @@ namespace iRacingSLI {
                     }
                 }
             }
-            catch (ManagementException e)
+            catch (ManagementException)
             {
                 /* Do Nothing */
             }
@@ -282,32 +303,50 @@ namespace iRacingSLI {
             return null;
         }
 
-        private void cboPorts_TextChanged(object sender, EventArgs e)
-        {
-           
-        }
-
         private void cboPorts_SelectedValueChanged(object sender, EventArgs e)
         {
-            
-        }
-
-        private void lblSpeed_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cboPorts_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-
-        }
-
-        private void cmbSerial_Click(object sender, EventArgs e)
-        {
-            tmr.Enabled = false;
             startSerialPort();
-            tmr.Enabled = true;
+        }
+
+        private void btnSavePort_Click(object sender, EventArgs e)
+        {
+            saveSerialPortToFile(cboPorts.SelectedItem.ToString());
+        }
+
+        private void saveSerialPortToFile(string port)
+        {
+            try
+            {
+                System.IO.File.WriteAllText(iRacingSLIConstants.CONFIG_FILE_NAME, port);
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show("Failed to write to file" + iRacingSLIConstants.CONFIG_FILE_NAME + "\n\n" + e.Message,
+                                "Failed to write config file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private string readSerialPortFromFile()
+        {
+            string my_port = "";
+            if (System.IO.File.Exists(iRacingSLIConstants.CONFIG_FILE_NAME))
+            {
+                try
+                {
+                    System.IO.StreamReader file =
+                        new System.IO.StreamReader(iRacingSLIConstants.CONFIG_FILE_NAME);
+                    // Just read the first line...
+                    my_port = file.ReadLine();
+                    file.Close();
+                }
+                catch(Exception e)
+                {
+                    MessageBox.Show("Failed to read file " + iRacingSLIConstants.CONFIG_FILE_NAME + "\n\n" + e.Message,
+                                    "Failed to read file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            return my_port;
         }
     }
 }
