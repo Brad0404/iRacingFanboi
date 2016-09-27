@@ -36,25 +36,34 @@ namespace iRacingSLI {
         private void frmMain_Load(object sender, EventArgs e)
         {
             String[] ports = SerialPort.GetPortNames();
-            cboPorts.Items.AddRange(ports);
-            cboPorts.SelectedIndex = 0;
-            if (AutodetectArduinoPort() != null)
-            {
-                label1.Text = "Arduino autodetected on " + AutodetectArduinoPort();
-                cboPorts.SelectedItem = AutodetectArduinoPort();
-            }
 
-            string saved_port = readSerialPortFromFile();
-            foreach (string port in cboPorts.Items)
+            if (ports.Length > 0)
             {
-                if (port.Equals(saved_port))
+                cboPorts.Items.AddRange(ports);
+                cboPorts.SelectedIndex = 0;
+                if (AutodetectArduinoPort() != null)
                 {
-                    cboPorts.SelectedItem = saved_port;
-                    label1.Text = "Restored saved port " + port;
-                    break;
+                    label1.Text = "Arduino autodetected on " + AutodetectArduinoPort();
+                    cboPorts.SelectedItem = AutodetectArduinoPort();
+                }
+
+                string saved_port = readSerialPortFromFile();
+                foreach (string port in cboPorts.Items)
+                {
+                    if (port.Equals(saved_port))
+                    {
+                        cboPorts.SelectedItem = saved_port;
+                        label1.Text = "Restored saved port " + port;
+                        break;
+                    }
                 }
             }
-
+            else
+            {
+                label1.Text = "No Arduino's found";
+                btnSavePort.Enabled = false;
+            }
+            
             lblConn.Text = "No connection with iRacing API";
             sdk.Startup(); 
             tmr.Enabled = true;
