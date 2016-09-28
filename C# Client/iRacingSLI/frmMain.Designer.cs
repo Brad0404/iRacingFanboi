@@ -38,7 +38,7 @@
             this.chkAutoTopSpeed = new System.Windows.Forms.CheckBox();
             this.lblFanSpeed = new System.Windows.Forms.Label();
             this.lbliracingStatus = new System.Windows.Forms.Label();
-            this.btnSavePort = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.carTopSpeed)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -55,7 +55,7 @@
             this.cboPorts.FormattingEnabled = true;
             this.cboPorts.Location = new System.Drawing.Point(9, 140);
             this.cboPorts.Name = "cboPorts";
-            this.cboPorts.Size = new System.Drawing.Size(192, 21);
+            this.cboPorts.Size = new System.Drawing.Size(163, 21);
             this.cboPorts.TabIndex = 5;
             this.cboPorts.SelectedValueChanged += new System.EventHandler(this.cboPorts_SelectedValueChanged);
             // 
@@ -74,7 +74,7 @@
             // lblConn
             // 
             this.lblConn.AutoSize = true;
-            this.lblConn.Location = new System.Drawing.Point(6, 164);
+            this.lblConn.Location = new System.Drawing.Point(12, 172);
             this.lblConn.Name = "lblConn";
             this.lblConn.Size = new System.Drawing.Size(0, 13);
             this.lblConn.TabIndex = 7;
@@ -195,22 +195,22 @@
             this.lbliracingStatus.Text = "iRacing SDK";
             this.lbliracingStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // btnSavePort
+            // btnSave
             // 
-            this.btnSavePort.Location = new System.Drawing.Point(208, 139);
-            this.btnSavePort.Name = "btnSavePort";
-            this.btnSavePort.Size = new System.Drawing.Size(62, 23);
-            this.btnSavePort.TabIndex = 26;
-            this.btnSavePort.Text = "Save";
-            this.btnSavePort.UseVisualStyleBackColor = true;
-            this.btnSavePort.Click += new System.EventHandler(this.btnSavePort_Click);
+            this.btnSave.Location = new System.Drawing.Point(178, 139);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(92, 23);
+            this.btnSave.TabIndex = 25;
+            this.btnSave.Text = "Save Settings";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(275, 250);
-            this.Controls.Add(this.btnSavePort);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.lbliracingStatus);
             this.Controls.Add(this.lblFanSpeed);
             this.Controls.Add(this.groupBox1);
@@ -249,7 +249,7 @@
         private System.Windows.Forms.CheckBox chkAutoTopSpeed;
         private System.Windows.Forms.RadioButton radioButtonConst;
         private System.Windows.Forms.Label lbliracingStatus;
-        private System.Windows.Forms.Button btnSavePort;
+        private System.Windows.Forms.Button btnSave;
     }
 }
 

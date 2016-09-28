@@ -52,7 +52,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="iRacingSLIConstants.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -14,6 +14,9 @@ using System.Runtime.CompilerServices;
 
 namespace iRacingSLI {
     public partial class frmMain : Form {
+        private string CONFIG_FILE_NAME = AppDomain.CurrentDomain.BaseDirectory + "iRacingFanboi.txt";
+        private string preferredPort = "";
+
         iRacingSDK sdk = new iRacingSDK();
         
         SerialPort SP;
@@ -40,28 +43,12 @@ namespace iRacingSLI {
             if (ports.Length > 0)
             {
                 cboPorts.Items.AddRange(ports);
-                cboPorts.SelectedIndex = 0;
-                if (AutodetectArduinoPort() != null)
-                {
-                    label1.Text = "Arduino autodetected on " + AutodetectArduinoPort();
-                    cboPorts.SelectedItem = AutodetectArduinoPort();
-                }
-
-                string saved_port = readSerialPortFromFile();
-                foreach (string port in cboPorts.Items)
-                {
-                    if (port.Equals(saved_port))
-                    {
-                        cboPorts.SelectedItem = saved_port;
-                        label1.Text = "Restored saved port " + port;
-                        break;
-                    }
-                }
+                preferredPort = readSerialPortFromFile();
             }
             else
             {
                 label1.Text = "No Arduino's found";
-                btnSavePort.Enabled = false;
+                btnSave.Enabled = false;
             }
             
             lblConn.Text = "No connection with iRacing API";
@@ -96,8 +83,8 @@ namespace iRacingSLI {
                 lbliracingStatus.BackColor = Color.Yellow;
             }
             
-
-                if (sdk.IsConnected()) {
+            if (sdk.IsConnected())
+            {
 
                     /*
                     Gear = Convert.ToInt32(sdk.GetData("Gear"));
@@ -171,7 +158,6 @@ namespace iRacingSLI {
                 lblFanSpeed.Text = "Fan speed: " + Math.Round(Speed, 0);
 
                 writeSerialPort(Speed, e);             
-               
             }
             else //iRacing not connected
             {
@@ -187,7 +173,6 @@ namespace iRacingSLI {
                 {
                     writeSerialPort(0, e);
                 }
-
             }
         }            
         
@@ -211,12 +196,14 @@ namespace iRacingSLI {
                     cboPorts.SelectedItem = port;
                     lblArduinoStatus.BackColor = Color.LimeGreen;
                     label1.Text = "Connected to port " + port;
+                    tmr.Enabled = true;
                     break;
                 }
                 catch (Exception)
                 {
                     label1.Text = "Failed connecting to port " + port;
                     lblArduinoStatus.BackColor = Color.Red;
+                    tmr.Enabled = false;
                 }
             }
         }
@@ -225,20 +212,27 @@ namespace iRacingSLI {
         {
             List<string> ports = new List<string>();
 
+            if( cboPorts.SelectedItem != null )
+            {
+                // If someone selected the item, let's not attempt all ports
+                // just the one they told us to use.
+                ports.Add(cboPorts.SelectedItem.ToString());
+                return ports;
+            }
+
+            if( preferredPort != null && cboPorts.Items.IndexOf(preferredPort) >= 0)
+            {
+                // If the user had saved a port, lets force ourselves to use that
+                // port and not all other ports.
+                ports.Add(preferredPort);
+                return ports;
+            }
+
+            // Lets try them all!
             foreach (string port in cboPorts.Items)
             {
                 ports.Add(port);
             }
-
-            string selectedPort = cboPorts.SelectedText;
-            int indexOf = ports.IndexOf(selectedPort);
-
-            if (indexOf >= 0)
-            {
-                ports.RemoveAt(indexOf);
-                ports.Insert(0, selectedPort);
-            }
-
             return ports;
         }
 
@@ -250,7 +244,6 @@ namespace iRacingSLI {
 
         private void writeSerialPort(double Speed, EventArgs e)
         {
-
             serialdata[0] = 255;
             serialdata[1] = 88;
             serialdata[2] = 255;
@@ -282,34 +275,6 @@ namespace iRacingSLI {
             {
                 startSerialPort();
             }
-
-        }
-
-        private string AutodetectArduinoPort()
-        {
-            ManagementScope connectionScope = new ManagementScope();
-            SelectQuery serialQuery = new SelectQuery("SELECT * FROM Win32_SerialPort");
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher(connectionScope, serialQuery);
-
-            try
-            {
-                foreach (ManagementObject item in searcher.Get())
-                {
-                    string desc = item["Description"].ToString();
-                    string deviceId = item["DeviceID"].ToString();
-
-                    if (desc.Contains("Arduino"))
-                    {
-                        return deviceId;
-                    }
-                }
-            }
-            catch (ManagementException)
-            {
-                /* Do Nothing */
-            }
-
-            return null;
         }
 
         private void cboPorts_SelectedValueChanged(object sender, EventArgs e)
@@ -317,20 +282,24 @@ namespace iRacingSLI {
             startSerialPort();
         }
 
-        private void btnSavePort_Click(object sender, EventArgs e)
+        private void btnSave_Click(object sender, EventArgs e)
         {
             saveSerialPortToFile(cboPorts.SelectedItem.ToString());
         }
-
+        
         private void saveSerialPortToFile(string port)
         {
             try
             {
-                System.IO.File.WriteAllText(iRacingSLIConstants.CONFIG_FILE_NAME, port);
+                System.IO.File.WriteAllText(CONFIG_FILE_NAME, port);
+                MessageBox.Show("Details have been saved", 
+                                "Save port details", 
+                                MessageBoxButtons.OK, 
+                                MessageBoxIcon.Information);
             }
             catch(Exception e)
             {
-                MessageBox.Show("Failed to write to file" + iRacingSLIConstants.CONFIG_FILE_NAME + "\n\n" + e.Message,
+                MessageBox.Show("Failed to write to file" + CONFIG_FILE_NAME + "\n\n" + e.Message,
                                 "Failed to write config file", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -338,19 +307,19 @@ namespace iRacingSLI {
         private string readSerialPortFromFile()
         {
             string my_port = "";
-            if (System.IO.File.Exists(iRacingSLIConstants.CONFIG_FILE_NAME))
+            if (System.IO.File.Exists(CONFIG_FILE_NAME))
             {
                 try
                 {
                     System.IO.StreamReader file =
-                        new System.IO.StreamReader(iRacingSLIConstants.CONFIG_FILE_NAME);
+                        new System.IO.StreamReader(CONFIG_FILE_NAME);
                     // Just read the first line...
                     my_port = file.ReadLine();
                     file.Close();
                 }
                 catch(Exception e)
                 {
-                    MessageBox.Show("Failed to read file " + iRacingSLIConstants.CONFIG_FILE_NAME + "\n\n" + e.Message,
+                    MessageBox.Show("Failed to read file " + CONFIG_FILE_NAME + "\n\n" + e.Message,
                                     "Failed to read file", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
