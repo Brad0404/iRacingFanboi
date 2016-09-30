@@ -25,9 +25,8 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             this.tmr = new System.Windows.Forms.Timer(this.components);
-            this.cmbSerial = new System.Windows.Forms.Button();
             this.cboPorts = new System.Windows.Forms.ComboBox();
-            this.lblColor = new System.Windows.Forms.Label();
+            this.lblArduinoStatus = new System.Windows.Forms.Label();
             this.lblConn = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lblSpeed = new System.Windows.Forms.Label();
@@ -38,6 +37,7 @@
             this.radioButtonConst = new System.Windows.Forms.RadioButton();
             this.chkAutoTopSpeed = new System.Windows.Forms.CheckBox();
             this.lblFanSpeed = new System.Windows.Forms.Label();
+            this.lbliracingStatus = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.carTopSpeed)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -49,43 +49,32 @@
             this.tmr.Interval = 50;
             this.tmr.Tick += new System.EventHandler(this.tmr_Tick);
             // 
-            // cmbSerial
-            // 
-            this.cmbSerial.Enabled = false;
-            this.cmbSerial.Location = new System.Drawing.Point(207, 127);
-            this.cmbSerial.Name = "cmbSerial";
-            this.cmbSerial.Size = new System.Drawing.Size(53, 43);
-            this.cmbSerial.TabIndex = 0;
-            this.cmbSerial.Text = "Start serial port";
-            this.cmbSerial.UseVisualStyleBackColor = true;
-            this.cmbSerial.Visible = false;
-            this.cmbSerial.Click += new System.EventHandler(this.cmbSerial_Click);
-            // 
             // cboPorts
             // 
             this.cboPorts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboPorts.FormattingEnabled = true;
             this.cboPorts.Location = new System.Drawing.Point(9, 140);
             this.cboPorts.Name = "cboPorts";
-            this.cboPorts.Size = new System.Drawing.Size(192, 21);
+            this.cboPorts.Size = new System.Drawing.Size(163, 21);
             this.cboPorts.TabIndex = 5;
-            this.cboPorts.SelectedIndexChanged += new System.EventHandler(this.cboPorts_SelectedIndexChanged);
             this.cboPorts.SelectedValueChanged += new System.EventHandler(this.cboPorts_SelectedValueChanged);
-            this.cboPorts.TextChanged += new System.EventHandler(this.cboPorts_TextChanged);
             // 
-            // lblColor
+            // lblArduinoStatus
             // 
-            this.lblColor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.lblColor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblColor.Location = new System.Drawing.Point(9, 206);
-            this.lblColor.Name = "lblColor";
-            this.lblColor.Size = new System.Drawing.Size(18, 19);
-            this.lblColor.TabIndex = 6;
+            this.lblArduinoStatus.BackColor = System.Drawing.Color.Red;
+            this.lblArduinoStatus.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.lblArduinoStatus.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.lblArduinoStatus.Location = new System.Drawing.Point(6, 226);
+            this.lblArduinoStatus.Name = "lblArduinoStatus";
+            this.lblArduinoStatus.Size = new System.Drawing.Size(72, 19);
+            this.lblArduinoStatus.TabIndex = 6;
+            this.lblArduinoStatus.Text = "Arduino";
+            this.lblArduinoStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblConn
             // 
             this.lblConn.AutoSize = true;
-            this.lblConn.Location = new System.Drawing.Point(12, 193);
+            this.lblConn.Location = new System.Drawing.Point(12, 172);
             this.lblConn.Name = "lblConn";
             this.lblConn.Size = new System.Drawing.Size(0, 13);
             this.lblConn.TabIndex = 7;
@@ -107,7 +96,6 @@
             this.lblSpeed.Size = new System.Drawing.Size(87, 13);
             this.lblSpeed.TabIndex = 13;
             this.lblSpeed.Text = "Current Speed: 0";
-            this.lblSpeed.Click += new System.EventHandler(this.lblSpeed_Click);
             // 
             // carTopSpeed
             // 
@@ -190,17 +178,28 @@
             // lblFanSpeed
             // 
             this.lblFanSpeed.AutoSize = true;
-            this.lblFanSpeed.Location = new System.Drawing.Point(17, 26);
+            this.lblFanSpeed.Location = new System.Drawing.Point(14, 26);
             this.lblFanSpeed.Name = "lblFanSpeed";
             this.lblFanSpeed.Size = new System.Drawing.Size(74, 13);
             this.lblFanSpeed.TabIndex = 24;
             this.lblFanSpeed.Text = "Fan Speed : 0";
             // 
+            // lbliracingStatus
+            // 
+            this.lbliracingStatus.BackColor = System.Drawing.Color.Red;
+            this.lbliracingStatus.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.lbliracingStatus.Location = new System.Drawing.Point(194, 226);
+            this.lbliracingStatus.Name = "lbliracingStatus";
+            this.lbliracingStatus.Size = new System.Drawing.Size(76, 19);
+            this.lbliracingStatus.TabIndex = 25;
+            this.lbliracingStatus.Text = "iRacing SDK";
+            this.lbliracingStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(9, 167);
+            this.btnSave.Location = new System.Drawing.Point(178, 139);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(106, 23);
+            this.btnSave.Size = new System.Drawing.Size(92, 23);
             this.btnSave.TabIndex = 25;
             this.btnSave.Text = "Save Settings";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -210,16 +209,17 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(275, 232);
+            this.ClientSize = new System.Drawing.Size(275, 250);
             this.Controls.Add(this.btnSave);
+            this.Controls.Add(this.lbliracingStatus);
             this.Controls.Add(this.lblFanSpeed);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.lblSpeed);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblConn);
-            this.Controls.Add(this.lblColor);
+            this.Controls.Add(this.lblArduinoStatus);
             this.Controls.Add(this.cboPorts);
-            this.Controls.Add(this.cmbSerial);
+            this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "frmMain";
@@ -236,9 +236,8 @@
         #endregion
 
         private System.Windows.Forms.Timer tmr;
-        private System.Windows.Forms.Button cmbSerial;
         private System.Windows.Forms.ComboBox cboPorts;
-        private System.Windows.Forms.Label lblColor;
+        private System.Windows.Forms.Label lblArduinoStatus;
         private System.Windows.Forms.Label lblConn;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblSpeed;
@@ -249,6 +248,7 @@
         private System.Windows.Forms.Label lblFanSpeed;
         private System.Windows.Forms.CheckBox chkAutoTopSpeed;
         private System.Windows.Forms.RadioButton radioButtonConst;
+        private System.Windows.Forms.Label lbliracingStatus;
         private System.Windows.Forms.Button btnSave;
     }
 }
