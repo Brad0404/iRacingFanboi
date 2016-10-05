@@ -136,7 +136,7 @@ namespace iRacingSLI {
 
                 carTopSpeeda = Convert.ToDouble(carTopSpeed.Value);
                 lblSpeed.Text = "Current speed: " + Math.Round(Speed, 0);
-            
+                
                 if (Speed >= carTopSpeeda)
                 {
                     carTopSpeeda = Speed;
@@ -144,6 +144,12 @@ namespace iRacingSLI {
                     if ((chkAutoTopSpeed.Checked) && (!radioButtonConst.Checked)) {
                         carTopSpeed.Value = Convert.ToDecimal(carTopSpeedb);
                     }                        
+                }
+
+                if (Convert.ToDouble(sdk.GetData("VelocityX")) < 0)
+                {
+                    // User is going in reverse, stop the fans...
+                    Speed = 0;
                 }
 
                 if (!radioButtonConst.Checked)
