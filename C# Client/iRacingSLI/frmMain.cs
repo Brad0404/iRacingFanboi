@@ -64,7 +64,7 @@ namespace iRacingSLI {
 
         private void tmr_Tick(object sender, EventArgs e) {
 
-            int fanSpeedPercent = (int) maxFanSpeed.Value;
+            double fanSpeedPercent = Convert.ToDouble(maxFanSpeed.Value);
             double manualSpeed = Convert.ToDouble(numericUpDownManualSpeed.Value) * 2.55; // remap manual speed percentage to 0-255
             if ((fanSpeedPercent < 0) || (fanSpeedPercent > 100))
                 fanSpeedPercent = 100;

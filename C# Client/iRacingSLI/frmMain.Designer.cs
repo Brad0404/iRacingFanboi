@@ -35,19 +35,19 @@
             this.radioButtonKph = new System.Windows.Forms.RadioButton();
             this.radioButtonMph = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.chkAutoTopSpeed = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.maxFanSpeed = new System.Windows.Forms.NumericUpDown();
             this.lblFanSpeed = new System.Windows.Forms.Label();
             this.lbliracingStatus = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.maxFanSpeed = new System.Windows.Forms.NumericUpDown();
             this.fanProgressBar = new System.Windows.Forms.ProgressBar();
             this.checkBoxManualSpeed = new System.Windows.Forms.CheckBox();
             this.numericUpDownManualSpeed = new System.Windows.Forms.NumericUpDown();
-            this.label3 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.carTopSpeed)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.maxFanSpeed)).BeginInit();
@@ -105,9 +105,9 @@
             this.lblSpeed.AutoSize = true;
             this.lblSpeed.Location = new System.Drawing.Point(150, 160);
             this.lblSpeed.Name = "lblSpeed";
-            this.lblSpeed.Size = new System.Drawing.Size(106, 13);
+            this.lblSpeed.Size = new System.Drawing.Size(69, 13);
             this.lblSpeed.TabIndex = 13;
-            this.lblSpeed.Text = "Current Car Speed: 0";
+            this.lblSpeed.Text = "Car Speed: 0";
             this.lblSpeed.Click += new System.EventHandler(this.lblSpeed_Click);
             // 
             // carTopSpeed
@@ -175,6 +175,24 @@
             this.groupBox1.Text = "iRacing Fan Control";
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(233, 71);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(15, 13);
+            this.label5.TabIndex = 32;
+            this.label5.Text = "%";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(7, 23);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(79, 13);
+            this.label3.TabIndex = 27;
+            this.label3.Text = "Car Top Speed";
+            // 
             // chkAutoTopSpeed
             // 
             this.chkAutoTopSpeed.AutoSize = true;
@@ -188,6 +206,34 @@
             this.chkAutoTopSpeed.Text = "Update top speed dynamically";
             this.chkAutoTopSpeed.UseVisualStyleBackColor = true;
             this.chkAutoTopSpeed.CheckedChanged += new System.EventHandler(this.chkAutoTopSpeed_CheckedChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(7, 72);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(150, 13);
+            this.label2.TabIndex = 26;
+            this.label2.Text = "Maximum In-game Fan Speed:";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // maxFanSpeed
+            // 
+            this.maxFanSpeed.Location = new System.Drawing.Point(190, 69);
+            this.maxFanSpeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.maxFanSpeed.Name = "maxFanSpeed";
+            this.maxFanSpeed.Size = new System.Drawing.Size(38, 20);
+            this.maxFanSpeed.TabIndex = 25;
+            this.maxFanSpeed.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.maxFanSpeed.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
             // lblFanSpeed
             // 
@@ -220,34 +266,6 @@
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 72);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(150, 13);
-            this.label2.TabIndex = 26;
-            this.label2.Text = "Maximum In-game Fan Speed:";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
-            // 
-            // maxFanSpeed
-            // 
-            this.maxFanSpeed.Location = new System.Drawing.Point(190, 69);
-            this.maxFanSpeed.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.maxFanSpeed.Name = "maxFanSpeed";
-            this.maxFanSpeed.Size = new System.Drawing.Size(38, 20);
-            this.maxFanSpeed.TabIndex = 25;
-            this.maxFanSpeed.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.maxFanSpeed.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
-            // 
             // fanProgressBar
             // 
             this.fanProgressBar.BackColor = System.Drawing.SystemColors.HighlightText;
@@ -266,9 +284,9 @@
             this.checkBoxManualSpeed.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.checkBoxManualSpeed.Location = new System.Drawing.Point(15, 128);
             this.checkBoxManualSpeed.Name = "checkBoxManualSpeed";
-            this.checkBoxManualSpeed.Size = new System.Drawing.Size(111, 17);
+            this.checkBoxManualSpeed.Size = new System.Drawing.Size(92, 17);
             this.checkBoxManualSpeed.TabIndex = 28;
-            this.checkBoxManualSpeed.Text = "Manual fan speed";
+            this.checkBoxManualSpeed.Text = "Set fan speed";
             this.checkBoxManualSpeed.UseVisualStyleBackColor = true;
             this.checkBoxManualSpeed.CheckedChanged += new System.EventHandler(this.checkBoxManualSpeed_CheckedChanged);
             // 
@@ -284,15 +302,6 @@
             0,
             0});
             this.numericUpDownManualSpeed.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged_1);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 23);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(79, 13);
-            this.label3.TabIndex = 27;
-            this.label3.Text = "Car Top Speed";
             // 
             // groupBox2
             // 
@@ -313,15 +322,6 @@
             this.label4.Size = new System.Drawing.Size(15, 13);
             this.label4.TabIndex = 31;
             this.label4.Text = "%";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(233, 71);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(15, 13);
-            this.label5.TabIndex = 32;
-            this.label5.Text = "%";
             // 
             // frmMain
             // 
