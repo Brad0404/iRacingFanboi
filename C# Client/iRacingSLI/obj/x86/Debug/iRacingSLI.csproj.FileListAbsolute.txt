@@ -1,9 +1,10 @@
-H:\Fernando\Programacao\C#\iRacingSLI\iRacingSLI\bin\Debug\iRacingSLI.exe
-H:\Fernando\Programacao\C#\iRacingSLI\iRacingSLI\bin\Debug\iRacingSLI.pdb
-H:\Fernando\Programacao\C#\iRacingSLI\iRacingSLI\obj\x86\Debug\ResolveAssemblyReference.cache
-H:\Fernando\Programacao\C#\iRacingSLI\iRacingSLI\obj\x86\Debug\iRacingSLI.frmMain.resources
-H:\Fernando\Programacao\C#\iRacingSLI\iRacingSLI\obj\x86\Debug\iRacingSLI.Properties.Resources.resources
-H:\Fernando\Programacao\C#\iRacingSLI\iRacingSLI\obj\x86\Debug\GenerateResource.read.1.tlog
-H:\Fernando\Programacao\C#\iRacingSLI\iRacingSLI\obj\x86\Debug\GenerateResource.write.1.tlog
-H:\Fernando\Programacao\C#\iRacingSLI\iRacingSLI\obj\x86\Debug\iRacingSLI.exe
-H:\Fernando\Programacao\C#\iRacingSLI\iRacingSLI\obj\x86\Debug\iRacingSLI.pdb
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\bin\Debug\iRacingFanBoi.exe.config
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\obj\x86\Debug\iRacingSLI.csprojResolveAssemblyReference.cache
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\obj\x86\Debug\iRacingSLI.Properties.Resources.resources
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\obj\x86\Debug\iRacingSLI.csproj.GenerateResource.Cache
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\obj\x86\Debug\iRacingSLI.frmMain.resources
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\bin\Debug\iRacingFanBoi.exe
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\bin\Debug\iRacingFanBoi.pdb
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\bin\Debug\iRSDKSharp.dll
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\obj\x86\Debug\iRacingFanBoi.exe
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\obj\x86\Debug\iRacingFanBoi.pdb
