@@ -137,6 +137,8 @@ namespace iRacingSLI {
                 }
                 else // remap car speed to 0-255 range, and then scale by max fan speed %
                 {
+                    if (Convert.ToDouble(sdk.GetData("VelocityX")) < 0)
+                        Speed = 0;  // User is going in reverse, stop the fans...
                     Speed = Speed * (255 / carTopSpeeda) * (fanSpeedPercent / 100);
                     if (Speed > 255)
                         Speed = 255;  //Fan speed cannot exceed 255 (byte limit) 
