@@ -40,10 +40,16 @@ namespace iRacingSLI {
         {
             String[] ports = SerialPort.GetPortNames();
 
+            numericUpDownManualSpeed.Value = Convert.ToDecimal(Properties.Settings.Default.ManualFanSpeed);
+            checkBoxManualSpeed.Checked = Properties.Settings.Default.EnableManualSpeed;
+            carTopSpeed.Value = Convert.ToDecimal(Properties.Settings.Default.TopSpeed);
+            maxFanSpeed.Value = Convert.ToDecimal(Properties.Settings.Default.MaxFanSpeed);
+            chkAutoTopSpeed.Checked = Properties.Settings.Default.AutoTopSpeed;
+
             if (ports.Length > 0)
             {
                 cboPorts.Items.AddRange(ports);
-                preferredPort = readSerialPortFromFile();
+                preferredPort = Properties.Settings.Default.Port.ToString();
             }
             else
             {
@@ -57,6 +63,20 @@ namespace iRacingSLI {
         }
 
         private void tmr_Tick(object sender, EventArgs e) {
+
+            double fanSpeedPercent = Convert.ToDouble(maxFanSpeed.Value);
+            double manualSpeed = Convert.ToDouble(numericUpDownManualSpeed.Value) * 2.55; // remap manual speed percentage to 0-255
+            if ((fanSpeedPercent < 0) || (fanSpeedPercent > 100))
+                fanSpeedPercent = 100;
+            if ((manualSpeed < 0) || (manualSpeed > 255))
+                manualSpeed = 255;
+
+            // show progress bar if manual speed adjustment is selected
+            if (checkBoxManualSpeed.Checked)
+                fanProgressBar.Visible = true;
+            else
+                fanProgressBar.Visible = false;
+
             if (Process.GetProcesses().Any(p => p.ProcessName.Contains("iRacingService")))
             {
                 lbliracingStatus.BackColor = Color.Yellow;
@@ -84,45 +104,14 @@ namespace iRacingSLI {
             }
             
             if (sdk.IsConnected())
-            {
-
-                    /*
-                    Gear = Convert.ToInt32(sdk.GetData("Gear"));
-                    RPM = Convert.ToDouble(sdk.GetData("RPM"));
-                    Fuel = Convert.ToDouble(sdk.GetData("FuelLevelPct"));
-                    Shift = Convert.ToDouble(sdk.GetData("ShiftIndicatorPct"));
-                    Engine = Convert.ToByte(sdk.GetData("EngineWarnings"));
-                    Speed_north = Convert.ToDouble(sdk.GetData("VelocityX"));
-                    Meters = Convert.ToDouble(sdk.GetData("LapDist"));
-                    IsOnTrack = Convert.ToInt32(sdk.GetData("IsOnTrack"));
-
-                    if (Convert.ToInt32(sdk.GetData("VelocityY")) > 0 )
-                    {
-                        Speed_west = Convert.ToDouble(sdk.GetData("VelocityY"));
-                        Speed_east = 0;
-                    }
-                    else if (Convert.ToInt32(sdk.GetData("VelocityY")) <=0)
-                        {
-                         Speed_east = Convert.ToDouble(sdk.GetData("VelocityY")) * -1;
-                         Speed_west = 0;
-                        }
-                    this.Text = Shift.ToString();
-
-                    iRPM = Convert.ToInt16(RPM);
-                    iFuel = Convert.ToByte(Math.Round(Fuel * 100));
-                    iShift = Convert.ToByte(Math.Round((Shift * 100 * 16) / 100));
-                    iSpeed_north = Convert.ToInt16(Speed_north);
-                    iSpeed_west = Convert.ToInt16(Speed_west);
-                    iSpeed_east = Convert.ToInt16(Speed_east);
-                    iMeters = Convert.ToInt16(Meters);*/
-                    
+            {                    
                 //MPH
                 if (this.radioButtonMph.Checked)
                 {
                     Speed = Convert.ToDouble(sdk.GetData("Speed")) * 2.23693629;
                     carTopSpeedb = Speed;
                 }
-                //KPH or Fan Speed user defined
+                //KPH
                 else
                 {
                     Speed = Convert.ToDouble(sdk.GetData("Speed")) * 3.6;
@@ -130,52 +119,50 @@ namespace iRacingSLI {
                 }
 
                 carTopSpeeda = Convert.ToDouble(carTopSpeed.Value);
-                lblSpeed.Text = "Current speed: " + Math.Round(Speed, 0);
+                lblSpeed.Text = "Current car speed: " + Math.Round(Speed, 0);
             
                 if (Speed >= carTopSpeeda)
                 {
                     carTopSpeeda = Speed;
                     //If user has allowed top speed auto update and not defined a constant fan speed
-                    if ((chkAutoTopSpeed.Checked) && (!radioButtonConst.Checked)) {
+                    if ((chkAutoTopSpeed.Checked) && (!checkBoxManualSpeed.Checked)) {
                         carTopSpeed.Value = Convert.ToDecimal(carTopSpeedb);
                     }                        
                 }
 
-                if (!radioButtonConst.Checked)
+                if (checkBoxManualSpeed.Checked) // manual fan speed 
                 {
-                    Speed = Speed * (255 / carTopSpeeda);
-                } else //User defined fan speed
+                    Speed = manualSpeed;
+                    fanProgressBar.Value = (int)Math.Round(Speed, 0);
+                }
+                else // remap car speed to 0-255 range, and then scale by max fan speed %
                 {
-                    Speed = Convert.ToDouble(carTopSpeed.Value);
+                    if (Convert.ToDouble(sdk.GetData("VelocityX")) < 0)
+                        Speed = 0;  // User is going in reverse, stop the fans...
+                    Speed = Speed * (255 / carTopSpeeda) * (fanSpeedPercent / 100);
+                    if (Speed > 255)
+                        Speed = 255;  //Fan speed cannot exceed 255 (byte limit) 
                 }
 
-                //Fan speed cannot exceed 255 (byte limit)
-                if (Speed > 255)
-                {
-                    Speed = 255;
-                }
-
-                lblFanSpeed.Text = "Fan speed: " + Math.Round(Speed, 0);
-
-                writeSerialPort(Speed, e);             
+                lblFanSpeed.Text = "Fan Speed (PWM): " + Math.Round(Speed, 0);  // update GUI with current fan speed
+                writeSerialPort(Speed, e);       // write speed to arduino serial port      
             }
             else //iRacing not connected
             {
-                if (radioButtonConst.Checked)
+                if (checkBoxManualSpeed.Checked)
                 {
-                    if (Convert.ToDouble(carTopSpeed.Value) < 256)
-                    {
-                        writeSerialPort(Convert.ToDouble(carTopSpeed.Value), e);
-                    }
-                    else { writeSerialPort(255, e);
-                    }
-                } else
+                    lblFanSpeed.Text = "Fan speed (PWM): " + Math.Round(manualSpeed, 0);
+                    fanProgressBar.Value = (int) Math.Round(manualSpeed,0);
+                    writeSerialPort(manualSpeed, e);
+                }
+                else
                 {
                     writeSerialPort(0, e);
+                    lblFanSpeed.Text = "Fan speed (PWM): 0";
                 }
             }
-        }            
-        
+        }
+
         private void startSerialPort()
         {
             try
@@ -284,47 +271,64 @@ namespace iRacingSLI {
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            saveSerialPortToFile(cboPorts.SelectedItem.ToString());
+            Properties.Settings.Default.EnableManualSpeed = checkBoxManualSpeed.Checked;
+            Properties.Settings.Default.ManualFanSpeed = System.Convert.ToInt32(numericUpDownManualSpeed.Value);
+            Properties.Settings.Default.Port = cboPorts.SelectedItem.ToString();
+            Properties.Settings.Default.TopSpeed = System.Convert.ToInt32(carTopSpeed.Value);
+            Properties.Settings.Default.MaxFanSpeed = System.Convert.ToInt32(maxFanSpeed.Value);
+            Properties.Settings.Default.AutoTopSpeed = chkAutoTopSpeed.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void carTopSpeed_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            writeSerialPort(0, e);  // stop fans if application closing
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBoxManualSpeed_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void chkAutoTopSpeed_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void numericUpDown1_ValueChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblFanSpeed_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblSpeed_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+
         }
         
-        private void saveSerialPortToFile(string port)
-        {
-            try
-            {
-                System.IO.File.WriteAllText(CONFIG_FILE_NAME, port);
-                MessageBox.Show("Details have been saved", 
-                                "Save port details", 
-                                MessageBoxButtons.OK, 
-                                MessageBoxIcon.Information);
-            }
-            catch(Exception e)
-            {
-                MessageBox.Show("Failed to write to file" + CONFIG_FILE_NAME + "\n\n" + e.Message,
-                                "Failed to write config file", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private string readSerialPortFromFile()
-        {
-            string my_port = "";
-            if (System.IO.File.Exists(CONFIG_FILE_NAME))
-            {
-                try
-                {
-                    System.IO.StreamReader file =
-                        new System.IO.StreamReader(CONFIG_FILE_NAME);
-                    // Just read the first line...
-                    my_port = file.ReadLine();
-                    file.Close();
-                }
-                catch(Exception e)
-                {
-                    MessageBox.Show("Failed to read file " + CONFIG_FILE_NAME + "\n\n" + e.Message,
-                                    "Failed to read file", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-
-            return my_port;
-        }
     }
 }
