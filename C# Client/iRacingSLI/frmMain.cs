@@ -40,11 +40,12 @@ namespace iRacingSLI {
         {
             String[] ports = SerialPort.GetPortNames();
 
-            numericUpDownManualSpeed.Value = Convert.ToDecimal(Properties.Settings.Default.ManualFanSpeed);
-            checkBoxManualSpeed.Checked = Properties.Settings.Default.EnableManualSpeed;
             carTopSpeed.Value = Convert.ToDecimal(Properties.Settings.Default.TopSpeed);
-            maxFanSpeed.Value = Convert.ToDecimal(Properties.Settings.Default.MaxFanSpeed);
             chkAutoTopSpeed.Checked = Properties.Settings.Default.AutoTopSpeed;
+            maxFanSpeed.Value = Convert.ToDecimal(Properties.Settings.Default.MaxFanSpeed);
+            numericUpDownReplayFanSpeed.Value = Convert.ToDecimal(Properties.Settings.Default.FanSpeedDuringReplay);
+            checkBoxManualSpeed.Checked = Properties.Settings.Default.EnableManualSpeed;
+            numericUpDownManualSpeed.Value = Convert.ToDecimal(Properties.Settings.Default.ManualFanSpeed);
 
             if (ports.Length > 0)
             {
@@ -66,10 +67,13 @@ namespace iRacingSLI {
 
             double fanSpeedPercent = Convert.ToDouble(maxFanSpeed.Value);
             double manualSpeed = Convert.ToDouble(numericUpDownManualSpeed.Value) * 2.55; // remap manual speed percentage to 0-255
+            double replayFanSpeed = Convert.ToDouble(numericUpDownReplayFanSpeed.Value) * 2.55; // remap replayfanspeed to 0-255
             if ((fanSpeedPercent < 0) || (fanSpeedPercent > 100))
                 fanSpeedPercent = 100;
             if ((manualSpeed < 0) || (manualSpeed > 255))
                 manualSpeed = 255;
+            if ((replayFanSpeed < 0) || (replayFanSpeed > 255))
+                replayFanSpeed = 0;
 
             // show progress bar if manual speed adjustment is selected
             if (checkBoxManualSpeed.Checked)
@@ -142,6 +146,8 @@ namespace iRacingSLI {
                     Speed = Speed * (255 / carTopSpeeda) * (fanSpeedPercent / 100);
                     if (Speed > 255)
                         Speed = 255;  //Fan speed cannot exceed 255 (byte limit) 
+                    if ((Convert.ToBoolean(sdk.GetData("IsReplayPlaying"))) == true)
+                        Speed = replayFanSpeed;  // replay currently running, run fan according to setting
                 }
 
                 lblFanSpeed.Text = "Fan Speed (PWM): " + Math.Round(Speed, 0);  // update GUI with current fan speed
@@ -277,6 +283,7 @@ namespace iRacingSLI {
             Properties.Settings.Default.TopSpeed = System.Convert.ToInt32(carTopSpeed.Value);
             Properties.Settings.Default.MaxFanSpeed = System.Convert.ToInt32(maxFanSpeed.Value);
             Properties.Settings.Default.AutoTopSpeed = chkAutoTopSpeed.Checked;
+            Properties.Settings.Default.FanSpeedDuringReplay = System.Convert.ToInt32(numericUpDownReplayFanSpeed.Value);
             Properties.Settings.Default.Save();
         }
 
@@ -316,6 +323,11 @@ namespace iRacingSLI {
         }
 
         private void lblSpeed_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void numericUpDown1_ValueChanged_2(object sender, EventArgs e)
         {
 
         }

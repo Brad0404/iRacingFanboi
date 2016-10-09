@@ -94,5 +94,17 @@ namespace iRacingSLI.Properties {
                 this["EnableManualSpeed"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        public int FanSpeedDuringReplay {
+            get {
+                return ((int)(this["FanSpeedDuringReplay"]));
+            }
+            set {
+                this["FanSpeedDuringReplay"] = value;
+            }
+        }
     }
 }
