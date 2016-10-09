@@ -1,0 +1,10 @@
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\bin\Debug\iRacingFanBoi.exe.config
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\obj\x86\Debug\iRacingSLI.csprojResolveAssemblyReference.cache
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\obj\x86\Debug\iRacingSLI.Properties.Resources.resources
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\obj\x86\Debug\iRacingSLI.csproj.GenerateResource.Cache
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\obj\x86\Debug\iRacingSLI.frmMain.resources
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\bin\Debug\iRacingFanBoi.exe
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\bin\Debug\iRacingFanBoi.pdb
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\bin\Debug\iRSDKSharp.dll
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\obj\x86\Debug\iRacingFanBoi.exe
+C:\Users\mat\Source\Repos\iRacingFanboi\C# Client\iRacingSLI\obj\x86\Debug\iRacingFanBoi.pdb
