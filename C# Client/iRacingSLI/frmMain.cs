@@ -36,6 +36,11 @@ namespace iRacingSLI {
             InitializeComponent();
         }
 
+        public void SendStopToArduino()
+        {
+            writeSerialPort(0);
+        }
+
         private void frmMain_Load(object sender, EventArgs e)
         {
             String[] ports = SerialPort.GetPortNames();
@@ -131,7 +136,7 @@ namespace iRacingSLI {
 
                 carTopSpeeda = Convert.ToDouble(carTopSpeed.Value);
                 lblSpeed.Text = "Current speed: " + Math.Round(Speed, 0);
-            
+                
                 if (Speed >= carTopSpeeda)
                 {
                     carTopSpeeda = Speed;
@@ -139,6 +144,12 @@ namespace iRacingSLI {
                     if ((chkAutoTopSpeed.Checked) && (!radioButtonConst.Checked)) {
                         carTopSpeed.Value = Convert.ToDecimal(carTopSpeedb);
                     }                        
+                }
+
+                if (Convert.ToDouble(sdk.GetData("VelocityX")) < 0)
+                {
+                    // User is going in reverse, stop the fans...
+                    Speed = 0;
                 }
 
                 if (!radioButtonConst.Checked)
@@ -157,7 +168,7 @@ namespace iRacingSLI {
 
                 lblFanSpeed.Text = "Fan speed: " + Math.Round(Speed, 0);
 
-                writeSerialPort(Speed, e);             
+                writeSerialPort(Speed);
             }
             else //iRacing not connected
             {
@@ -165,13 +176,13 @@ namespace iRacingSLI {
                 {
                     if (Convert.ToDouble(carTopSpeed.Value) < 256)
                     {
-                        writeSerialPort(Convert.ToDouble(carTopSpeed.Value), e);
+                        writeSerialPort(Convert.ToDouble(carTopSpeed.Value));
                     }
-                    else { writeSerialPort(255, e);
+                    else { writeSerialPort(255);
                     }
                 } else
                 {
-                    writeSerialPort(0, e);
+                    writeSerialPort(0);
                 }
             }
         }            
@@ -242,7 +253,7 @@ namespace iRacingSLI {
             SP.Open();
         }
 
-        private void writeSerialPort(double Speed, EventArgs e)
+        private void writeSerialPort(double Speed)
         {
             serialdata[0] = 255;
             serialdata[1] = 88;

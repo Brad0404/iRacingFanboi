@@ -12,7 +12,10 @@ namespace iRacingSLI {
         static void Main() {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmMain());
+            frmMain form = new frmMain();
+            Application.Run(form);
+
+            AppDomain.CurrentDomain.ProcessExit += (s, e) => form.SendStopToArduino();
         }
     }
 }
