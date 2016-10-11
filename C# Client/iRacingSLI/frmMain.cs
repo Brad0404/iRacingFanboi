@@ -46,7 +46,7 @@ namespace iRacingSLI {
             numericUpDownReplayFanSpeed.Value = Convert.ToDecimal(Properties.Settings.Default.FanSpeedDuringReplay);
             checkBoxManualSpeed.Checked = Properties.Settings.Default.EnableManualSpeed;
             numericUpDownManualSpeed.Value = Convert.ToDecimal(Properties.Settings.Default.ManualFanSpeed);
-
+  
             if (ports.Length > 0)
             {
                 cboPorts.Items.AddRange(ports);
@@ -275,6 +275,32 @@ namespace iRacingSLI {
             startSerialPort();
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.Alt | Keys.U)) // Alt U hotkey for increase manual speed
+            {
+                if (numericUpDownManualSpeed.Value < 90)
+                    numericUpDownManualSpeed.Value = numericUpDownManualSpeed.Value + 10;
+                else
+                    numericUpDownManualSpeed.Value = 100;
+                return true;
+            }
+            if (keyData == (Keys.Alt | Keys.D)) // Alt D hotkey for decrease manual speed
+            {
+                if (numericUpDownManualSpeed.Value > 10)
+                    numericUpDownManualSpeed.Value = numericUpDownManualSpeed.Value - 10;
+                else
+                    numericUpDownManualSpeed.Value = 0;
+                return true;
+            }
+            if (keyData == (Keys.Alt | Keys.M)) // Alt M hotkey for manual speed checkbox
+            {
+                checkBoxManualSpeed.Checked = !checkBoxManualSpeed.Checked;
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
         private void btnSave_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.EnableManualSpeed = checkBoxManualSpeed.Checked;
@@ -328,6 +354,11 @@ namespace iRacingSLI {
         }
 
         private void numericUpDown1_ValueChanged_2(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cboPorts_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
